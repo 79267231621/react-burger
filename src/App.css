@@ -1,38 +1,63 @@
-.App {
-  text-align: center;
+.section{
+
+}
+.wrapper {
+    max-width: 100%;
+    width: 100%;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.container {
+    max-width: 1280px;
+    padding: 0px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.wrapper, .container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+}
+.col{
+    position: relative;
+}
+.col-25{
+    width: 25%;
+}
+.col-33{
+    width: 33.3333%;
+}
+.col-50{
+    width: 50%;
+}
+.text-rigth{
+    text-align: right;
+    justify-content: flex-end;
+}
+.text-center{
+    text-align: center;
+    justify-content: center;
+}
+.text-left{
+    text-align: left;
+    justify-content: flex-start;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+.scroll{
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.scroll::-webkit-scrollbar {
+    width: 6px;               /* ширина scrollbar */
 }
-
-.App-link {
-  color: #61dafb;
+.scroll::-webkit-scrollbar-track {
+    background: #2F2F37;        /* цвет дорожки */
 }
+.scroll::-webkit-scrollbar-thumb {
+    background-color: #8585AD;    /* цвет плашки */
+    border-radius: 0px;       /* закругления плашки */
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
