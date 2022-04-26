@@ -11,3 +11,66 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.section{
+
+}
+.wrapper {
+  max-width: 100%;
+  width: 100%;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.container {
+  max-width: 1280px;
+  padding: 0px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.wrapper, .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+}
+.col{
+  position: relative;
+}
+.col-25{
+  width: 25%;
+}
+.col-33{
+  width: 33.3333%;
+}
+.col-50{
+  width: 50%;
+}
+.text-rigth{
+  text-align: right;
+  justify-content: flex-end;
+}
+.text-center{
+  text-align: center;
+  justify-content: center;
+}
+.text-left{
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.scroll{
+
+}
+.scroll::-webkit-scrollbar {
+  width: 6px;               /* ширина scrollbar */
+}
+.scroll::-webkit-scrollbar-track {
+  background: #2F2F37;        /* цвет дорожки */
+}
+.scroll::-webkit-scrollbar-thumb {
+  background-color: #8585AD;    /* цвет плашки */
+  border-radius: 0px;       /* закругления плашки */
+
+}

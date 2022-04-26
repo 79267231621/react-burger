@@ -20,6 +20,7 @@
     flex: calc(50% - 24px);
     margin: 12px;
     max-width: calc(50% - 24px);
+    cursor: pointer;
 }
 .ingrid__item__title{
 

@@ -1,63 +1,57 @@
 // hocs/with-toggle.js
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from "prop-types";
 import styles from './Modal.module.css';
 import ModalOverlay from '../modalOverlay/ModalOverlay';
-import IngredientDetails from '../ingredientDetails/IngredientDetails';
-import OrderDetails from '../orderDetails/OrderDetails';
+
 
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import BurgerConstructor from "../burgerConstructor/BurgerConstructor";
 
 
 export default function Modal (props) {
-    const [type, setType] = React.useState();
 
     React.useEffect(() => {
 
-        document.addEventListener('keypress', keypressEsc)
+        document.addEventListener('keydown', handleEscKey)
         return () => {
-            document.removeEventListener("keypress", keypressEsc);
+            document.removeEventListener("keydown", handleEscKey);
         }
 
     }, []);
 
-    const keypressEsc = (e) => {
-        let keyCode = e.keyCode;
-        if (keyCode === '27') {
-            Closed();
+    const handleEscKey = (e) => {
+        const keyCode = e.key;
+        if (keyCode === 'Escape') {
+            closePopup();
         }
     }
 
-    const Closed = () =>{
-        props.modalVisible(false);
+    const closePopup = () =>{
+        props.closePopup(false);
     }
 
-    return (
+    return ReactDOM.createPortal(
         <>
-            <ModalOverlay modalVisible={props.modalVisible} />
+            <ModalOverlay closePopup={props.closePopup} />
             <div className={[styles.modal, "p-10 pb-15"].join(" ")} >
-                <div className={[styles.close, "m-10 mt-15"].join(" ")} onClick={Closed}>
+                <div className={[styles.close, "m-10 mt-15"].join(" ")} onClick={closePopup}>
                     <CloseIcon type="primary" />
                 </div>
                 <h2 className={[styles.title, "text text_type_main-large"].join(" ")}>
                     {props.title}
                 </h2>
                 <div className={styles.container}>
-                    {props.type == "IngredientDetails" &&
-                        <IngredientDetails item={props.item} />
-                    }
-                    {props.type == "OrderDetails" &&
-                        <OrderDetails item={props.item} />
-                    }
+                    {props.children}
                 </div>
             </div>
-        </>
-    )
+        </>,
+        document.getElementById('modal')
+    );
 }
 
 Modal.propTypes = {
-    modalVisible: PropTypes.func,
+    closePopup: PropTypes.func,
     title: PropTypes.string,
     item: PropTypes.object,
     type: PropTypes.string

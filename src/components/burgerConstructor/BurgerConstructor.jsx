@@ -1,16 +1,19 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import PropTypes from "prop-types";
-import { ConstructorElement, Button, DragIcon, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import ingredientsPropTypes from '../../utils/types'
+import { ConstructorElement, Button, DragIcon, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import Modal from "../modal/Modal";
+import OrderDetails from "../orderDetails/OrderDetails";
 
 export default function BurgerConstructor (props) {
     const [total, setTotal] = React.useState(610);
-    const [orderPopup, setOrderPopup] = React.useState(false);
+    const [modal, setModal] = React.useState(false);
 
     React.useEffect(() => {
         const calculation = () => {
             let calculationTotal = null;
-            for (var i = 0; i < props.ingredients.length; i++) {
+            for (let i = 0; i < props.ingredients.length; i++) {
                 calculationTotal += props.ingredients[i].price;
             }
             setTotal(calculationTotal);
@@ -19,15 +22,10 @@ export default function BurgerConstructor (props) {
         calculation();
     }, [props.ingredients]);
 
-    const modalVisible = () => {
-        props.modalVisible({
-            visible: true,
-            type: 'OrderDetails',
-            item: {
-                item: {number:'023452'}
-            }
-        })
+    const closePopup = () => {
+        setModal(false);
     }
+
 
     return (
         <section className="col col-50 mt-25 pl-4 pr-4">
@@ -44,16 +42,17 @@ export default function BurgerConstructor (props) {
                 </div>
 
                 <div className={[styles.ingrid, "scroll"].join(" ")}>
-                        {props.ingredients.map((element, index)=>(
-                            <div  className={styles.ingrid__item} key={index}>
-                                <DragIcon type="primary" />
-                                <ConstructorElement
-                                    text={element.name}
-                                    price={element.price}
-                                    thumbnail={element.image}
-                                />
-                            </div>
-                        ))}
+                        {props.ingredients.map((element, index)=>
+                            element.type !== 'bun' &&
+                                <div className={styles.ingrid__item} key={index}>
+                                    <DragIcon type="primary"/>
+                                    <ConstructorElement
+                                        text={element.name}
+                                        price={element.price}
+                                        thumbnail={element.image}
+                                    />
+                                </div>
+                        )}
 
                 </div>
                 <div className={[styles.burgerTop, "ml-8"].join(" ")}>
@@ -72,34 +71,21 @@ export default function BurgerConstructor (props) {
                     {total}
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button type="primary" size="large" onClick={modalVisible}>
+                <Button type="primary" size="large" onClick={ () => { setModal(true) }}>
                     Оформить заказ
                 </Button>
 
             </footer>
-
+            {modal &&
+                <Modal closePopup={closePopup} >
+                    <OrderDetails number='012363' />
+                </Modal>
+            }
         </section>
     )
 }
 
-const ingredientsPropTypes = PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number,
-    carbohydrates: PropTypes.number,
-    calories: PropTypes.number,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string,
-    image_large: PropTypes.string,
-    __v: PropTypes.number
-
-});
-
 BurgerConstructor.propTypes = {
-    modalVisible: PropTypes.func,
     topBurger: PropTypes.arrayOf(ingredientsPropTypes),
     ingredients: PropTypes.arrayOf(ingredientsPropTypes),
     bottomBurger: PropTypes.arrayOf(ingredientsPropTypes)

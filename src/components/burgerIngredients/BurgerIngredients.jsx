@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import ingredientsPropTypes from '../../utils/types'
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import Modal from "../modal/Modal";
+import IngredientDetails from "../ingredientDetails/IngredientDetails";
 
 
 export default function BurgerIngredients (props) {
@@ -14,6 +16,11 @@ export default function BurgerIngredients (props) {
         ],
     });
     const [current, setCurrent] = React.useState("bun");
+    const [modal, setModal] = React.useState(false);
+
+    const closePopup = () => {
+        setModal(false);
+    }
 
     let ingridGroups ={
         bun:[],
@@ -22,20 +29,8 @@ export default function BurgerIngredients (props) {
     };
 
     props.ingredients.forEach(function(item, index, array) {
-
         ingridGroups[item.type].push(item);
     });
-
-    const modalVisible = (e, inrgid) => {
-        props.modalVisible({
-            visible: true,
-            type: 'IngredientDetails',
-            item: {
-                item: inrgid,
-                title: 'Детали ингридиента'
-            }
-        })
-    }
 
     return (
         <section className="col col-50 p-5">
@@ -58,9 +53,7 @@ export default function BurgerIngredients (props) {
                         <div className={[styles.ingrid, ""].join(" ")}>
                             {ingridGroups[group.value].map((inrgid, index)=>(
 
-                                <div className={[styles.ingrid__item, ""].join(" ")} key={index} onClick={(e) => {
-                                    modalVisible(e, inrgid);
-                                }}>
+                                <div className={[styles.ingrid__item, ""].join(" ")} key={index} onClick={ () => { setModal(inrgid) } }>
                                     {inrgid.__v >= 1 &&
                                         <Counter count={inrgid.__v} size="default" />
                                     }
@@ -80,28 +73,16 @@ export default function BurgerIngredients (props) {
                     </div>
                 ))}
             </div>
+            {modal &&
+                <Modal title="Детали ингредиента" closePopup={closePopup} >
+                    <IngredientDetails item={modal} />
+                </Modal>
+            }
         </section>
     )
 
 }
 
-const ingredientsPropTypes = PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number,
-    carbohydrates: PropTypes.number,
-    calories: PropTypes.number,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string,
-    image_large: PropTypes.string,
-    __v: PropTypes.number
-
-});
-
 BurgerIngredients.propTypes = {
-    modalVisible: PropTypes.func,
     ingredients: PropTypes.arrayOf(ingredientsPropTypes)
 };
