@@ -53,6 +53,5 @@ export default function Modal (props) {
 Modal.propTypes = {
     closePopup: PropTypes.func,
     title: PropTypes.string,
-    item: PropTypes.object,
-    type: PropTypes.string
+    children: PropTypes.element
 };

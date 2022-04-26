@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import styles from './IngredientDetails.module.css';
-import BurgerConstructor from "../burgerConstructor/BurgerConstructor";
+import ingredientsPropTypes from '../../utils/types';
 
 
 export default function IngredientDetails (props) {
@@ -42,5 +42,5 @@ export default function IngredientDetails (props) {
 }
 
 IngredientDetails.propTypes = {
-    item: PropTypes.object
+    item: PropTypes.shape(ingredientsPropTypes)
 };

@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from './ModalOverlay.module.css';
+import PropTypes from "prop-types";
+
 export default function ModalOverlay (props) {
 
     const closePopup = () =>{
@@ -11,3 +13,7 @@ export default function ModalOverlay (props) {
         </div>
     )
 }
+
+ModalOverlay.propTypes = {
+    closePopup: PropTypes.func,
+};
