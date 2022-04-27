@@ -1,0 +1,38 @@
+.groupes{
+    max-height: 600px;
+    overflow: auto;
+}
+.groupe__ingrid{
+
+}
+.ingrid{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.ingrid__item{
+    position: relative;
+    text-align: center;
+    flex: calc(50% - 24px);
+    margin: 12px;
+    max-width: calc(50% - 24px);
+    cursor: pointer;
+}
+.ingrid__item__title{
+
+}
+.ingrid__item__img{
+
+}
+.ingrid__item__price{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.ingrid__item__desc{
+
+}

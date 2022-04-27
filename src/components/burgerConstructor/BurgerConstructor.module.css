@@ -1,0 +1,38 @@
+.burgerTop{
+
+}
+.burgerBottom{
+
+}
+.ingrid{
+    max-height: 400px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+.ingrid__item{
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+.ingrid__item svg{
+    margin-right: 10px;
+}
+.ingrid__item .constructor-element{
+    width: 100%;
+}
+.constructor__footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.constructor__footer__total{
+    display: flex;
+    align-items: center;
+}
+.constructor__footer__total svg{
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+}

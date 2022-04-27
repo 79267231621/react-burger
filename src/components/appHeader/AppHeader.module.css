@@ -1,0 +1,28 @@
+header{
+    background: #1C1C21;
+    /* card/x-large */
+    box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+}
+.logo{
+    position: absolute;
+    left: 0;
+    right: 0;
+    align-items: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.nav{
+    display: flex;
+    color: #8585AD;
+}
+.nav_right{
+    composes: nav;
+    justify-content: flex-end;
+}
+.nav__item{
+display: flex;
+}
+.active{
+color: #F2F2F3;
+}
