@@ -6,8 +6,9 @@ import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger
 import Modal from "../modal/Modal";
 import IngredientDetails from "../ingredientDetails/IngredientDetails";
 
+import { IngredientsContext } from '../../services/appContext';
 
-export default function BurgerIngredients (props) {
+export default function BurgerIngredients () {
     const [state, setState] = React.useState({
         ingridGroups: [
             { value: 'bun', name: 'Булки'},
@@ -17,6 +18,8 @@ export default function BurgerIngredients (props) {
     });
     const [current, setCurrent] = React.useState("bun");
     const [modal, setModal] = React.useState(false);
+
+    const { ingredients } = React.useContext(IngredientsContext);
 
     const closePopup = () => {
         setModal(false);
@@ -28,7 +31,7 @@ export default function BurgerIngredients (props) {
         main:[],
     };
 
-    props.ingredients.forEach(function(item, index, array) {
+    ingredients.forEach(function(item) {
         ingridGroups[item.type].push(item);
     });
 
@@ -45,7 +48,7 @@ export default function BurgerIngredients (props) {
                 ))}
             </div>
             <div className={[styles.groupes, "scroll"].join(" ")}>
-                {state.ingridGroups.map((group, index)=>(
+                {state.ingridGroups.map((group)=>(
                     <div className={[styles.groupe__ingrid, "mb-10"].join(" ")} key={group.value}>
                         <p className="text text_type_main-medium mb-3">
                             {group.name}
