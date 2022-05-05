@@ -5,6 +5,42 @@ import BurgerIngredients from '../burgerIngredients/BurgerIngredients';
 
 import { IngredientsContext, ConstructorContext } from '../../services/appContext';
 
+
+function updateConstructor(state, action) {
+    switch (action.type) {
+        case "add":
+            if( action.value.type === 'bun' ){
+                let total = (state.topBun.price)? state.topBun.price : null;
+                total += (state.bottomBun.price)? state.bottomBun.price : null ;
+                return {
+                    ingredients: state.ingredients,
+                    topBun: action.value,
+                    bottomBun: action.value,
+                    total: state.total + action.value.price + action.value.price - total
+                };
+            } else if( !state.ingredients.find(ingredient => ingredient._id === action.value._id) ) {
+                return {
+                    ingredients: [...state.ingredients, action.value ],
+                    topBun: state.topBun,
+                    bottomBun: state.bottomBun,
+                    total: state.total + action.value.price
+                };
+            } else {
+                return state;
+            }
+
+        case "remove":
+            return {
+                ingredients: state.ingredients.filter(ingredient => ingredient._id != action.value._id),
+                topBun: state.topBun,
+                bottomBun: state.bottomBun,
+                total: state.total - action.value.price
+            };
+        default:
+            return state;
+    }
+}
+
 export default function App (){
     const [state, setState] = React.useState({
         ingredients: [],
@@ -23,40 +59,6 @@ export default function App (){
     };
     const [constructor, constructorDispatcher] = React.useReducer(updateConstructor, constructorState, undefined);
 
-    function updateConstructor(state, action) {
-        switch (action.type) {
-            case "add":
-                if( action.value.type === 'bun' ){
-                    let total = (state.topBun.price)? state.topBun.price : null;
-                        total += (state.bottomBun.price)? state.bottomBun.price : null ;
-                    return {
-                        ingredients: state.ingredients,
-                        topBun: action.value,
-                        bottomBun: action.value,
-                        total: state.total + action.value.price + action.value.price - total
-                    };
-                } else if( !state.ingredients.find(ingredient => ingredient._id === action.value._id) ) {
-                    return {
-                        ingredients: [...state.ingredients, action.value ],
-                        topBun: state.topBun,
-                        bottomBun: state.bottomBun,
-                        total: state.total + action.value.price
-                    };
-                } else {
-                    return state;
-                }
-
-            case "remove":
-                return {
-                    ingredients: state.ingredients.filter(ingredient => ingredient._id != action.value._id),
-                    topBun: state.topBun,
-                    bottomBun: state.bottomBun,
-                    total: state.total - action.value.price
-                };
-            default:
-                throw new Error(`Wrong type of action: ${action.type}`);
-        }
-    }
 
     React.useEffect(() => {
         const getIngredients = async () => {
@@ -96,12 +98,12 @@ export default function App (){
             <main className="container">
                 {!state.isLoading &&
                 !state.hasError &&
-                    <ConstructorContext.Provider value={{ constructor, constructorDispatcher }}>
-                        <IngredientsContext.Provider value={{ ingredients, setIngredients }}>
-                            <BurgerIngredients />
+                    <IngredientsContext.Provider value={{ ingredients, setIngredients }}>
+                        <BurgerIngredients />
+                        <ConstructorContext.Provider value={{ constructor, constructorDispatcher }}>
                             <BurgerConstructor />
-                        </IngredientsContext.Provider>
-                    </ConstructorContext.Provider>
+                        </ConstructorContext.Provider>
+                    </IngredientsContext.Provider>
                 }
             </main>
         </>
