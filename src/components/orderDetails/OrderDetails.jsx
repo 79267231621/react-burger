@@ -1,16 +1,18 @@
 // hocs/with-toggle.js
 import React from 'react';
 import styles from './OrderDetails.module.css';
-import PropTypes from "prop-types";
-import IngredientDetails from "../ingredientDetails/IngredientDetails";
+import {useSelector} from "react-redux";
 
+export default function OrderDetails () {
 
-export default function OrderDetails (props) {
+    const order = useSelector(
+        store => store.order
+    );
 
     return (
         <>
             <div className={[styles.title, "text text_type_digits-large mt-4"].join(" ")} >
-                {props.number}
+                {order.number}
             </div>
             <p className="text text_type_main-medium mt-8 mb-15">
                 Идентификатор заказа
@@ -28,7 +30,3 @@ export default function OrderDetails (props) {
         </>
     )
 }
-
-IngredientDetails.propTypes = {
-    number: PropTypes.string
-};

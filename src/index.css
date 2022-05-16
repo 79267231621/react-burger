@@ -61,7 +61,7 @@ code {
 }
 
 .scroll{
-
+  position: relative;
 }
 .scroll::-webkit-scrollbar {
   width: 6px;               /* ширина scrollbar */

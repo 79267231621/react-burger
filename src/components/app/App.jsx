@@ -1,109 +1,35 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AppHeader from '../appHeader/AppHeader';
 import BurgerConstructor from '../burgerConstructor/BurgerConstructor';
 import BurgerIngredients from '../burgerIngredients/BurgerIngredients';
 
-import { IngredientsContext, ConstructorContext } from '../../services/appContext';
+import { getIngredients } from "../../services/actions/ingredients";
 
-
-function updateConstructor(state, action) {
-    switch (action.type) {
-        case "add":
-            if( action.value.type === 'bun' ){
-                let total = (state.topBun.price)? state.topBun.price : null;
-                total += (state.bottomBun.price)? state.bottomBun.price : null ;
-                return {
-                    ingredients: state.ingredients,
-                    topBun: action.value,
-                    bottomBun: action.value,
-                    total: state.total + action.value.price + action.value.price - total
-                };
-            } else if( !state.ingredients.find(ingredient => ingredient._id === action.value._id) ) {
-                return {
-                    ingredients: [...state.ingredients, action.value ],
-                    topBun: state.topBun,
-                    bottomBun: state.bottomBun,
-                    total: state.total + action.value.price
-                };
-            } else {
-                return state;
-            }
-
-        case "remove":
-            return {
-                ingredients: state.ingredients.filter(ingredient => ingredient._id != action.value._id),
-                topBun: state.topBun,
-                bottomBun: state.bottomBun,
-                total: state.total - action.value.price
-            };
-        default:
-            return state;
-    }
-}
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 export default function App (){
-    const [state, setState] = React.useState({
-        ingredients: [],
-        ingredConstructor: [],
-        isLoading: false,
-        hasError: false
-    });
-    const [ingredients, setIngredients] = React.useState([]);
-    const url = 'https://norma.nomoreparties.space/api/ingredients';
+    const dispatch = useDispatch();
 
-    const constructorState = {
-        ingredients: [],
-        topBun: [],
-        bottomBun: [],
-        total: null
-    };
-    const [constructor, constructorDispatcher] = React.useReducer(updateConstructor, constructorState, undefined);
-
+    const { ingredientsRequest, ingredientsFailed } = useSelector(
+        store => store.ingredients
+    );
 
     React.useEffect(() => {
-        const getIngredients = async () => {
-            setState({ ...state, hasError: false, isLoading: true });
-            fetch(url).then(res => {
-                    if (res.ok) {
-                        return res.json();
-                    }
-                    return Promise.reject(`Ошибка ${res.status}`);
-                })
-                .then(data => {
-                    setState({
-                        ...state, isLoading: false
-                    })
-                    setIngredients( data.data );
-                    data.data.forEach(function(item) {
-                        constructorDispatcher({
-                            type: 'add',
-                            value: item
-                        });
-                    });
-
-                })
-                .catch(e => {
-                    setState({ ...state, hasError: true, isLoading: false });
-                    console.log(e);
-                });
-
-        };
-
-        getIngredients();
+        dispatch( getIngredients() );
     }, []);
 
     return (
         <>
             <AppHeader />
             <main className="container">
-                {!state.isLoading &&
-                !state.hasError &&
-                    <IngredientsContext.Provider value={{ ingredients, setIngredients }}>
+                {!ingredientsRequest &&
+                !ingredientsFailed &&
+                    <DndProvider backend={HTML5Backend}>
                         <BurgerIngredients />
-                        <ConstructorContext.Provider value={{ constructor, constructorDispatcher }}>
-                            <BurgerConstructor />
-                        </ConstructorContext.Provider>
-                    </IngredientsContext.Provider>
+                        <BurgerConstructor />
+                    </DndProvider>
                 }
             </main>
         </>

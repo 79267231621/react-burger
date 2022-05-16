@@ -2,38 +2,41 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ingredientsPropTypes from '../../utils/types'
 import styles from './BurgerIngredients.module.css';
-import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/Modal";
 import IngredientDetails from "../ingredientDetails/IngredientDetails";
 
-import { IngredientsContext } from '../../services/appContext';
+import {useDispatch, useSelector} from "react-redux";
+import { DELETE_INGREDIENT_DETAILS} from "../../services/actions/ingredientDetails";
+
+import BurgerIngredient from "./BurgerIngredient/BurgerIngredient";
 
 export default function BurgerIngredients () {
-    const [state, setState] = React.useState({
-        ingridGroups: [
-            { value: 'bun', name: 'Булки'},
-            { value: 'sauce', name: 'Соусы'},
-            { value: 'main', name: 'Начинки'}
-        ],
-    });
-    const [current, setCurrent] = React.useState("bun");
-    const [modal, setModal] = React.useState(false);
+    const dispach = useDispatch();
 
-    const { ingredients } = React.useContext(IngredientsContext);
+    const [tab, setTab] = React.useState("bun");
+    const { ingredients, groups } = useSelector(store => store.ingredients);
+    const ingredientDetails = useSelector( store => store.ingredientDetails.ingredient );
 
     const closePopup = () => {
-        setModal(false);
+        dispach({type:DELETE_INGREDIENT_DETAILS});
     }
 
-    let ingridGroups ={
-        bun:[],
-        sauce:[],
-        main:[],
-    };
+    const refs = React.useRef([]);
+    refs.current = groups.map((element, index) => refs.current[index] ?? React.createRef());
 
-    ingredients.forEach(function(item) {
-        ingridGroups[item.type].push(item);
-    });
+    const onScroll = (e) => {
+        const scrollTop = e.target.scrollTop;
+
+        let possitions = [];
+        refs.current.forEach((block, index)=>{
+            possitions[index] = Math.abs(scrollTop - block.current.offsetTop);
+        })
+
+        const index = possitions.indexOf(Math.min(...possitions));
+        setTab(groups[index].value);
+
+    };
 
     return (
         <section className="col col-50 p-5">
@@ -41,44 +44,34 @@ export default function BurgerIngredients () {
                 Соберите бургер
             </p>
             <div style={{ display: 'flex' }} className="mb-10 ">
-                {state.ingridGroups.map((group, index)=>(
-                    <Tab value={group.value} active={current === group.value} onClick={setCurrent} key={index}>
+                {groups.map((group, index)=>(
+                    <Tab value={group.value} active={tab === group.value} onClick={setTab} key={index}>
                         {group.name}
                     </Tab>
                 ))}
             </div>
-            <div className={[styles.groupes, "scroll"].join(" ")}>
-                {state.ingridGroups.map((group)=>(
-                    <div className={[styles.groupe__ingrid, "mb-10"].join(" ")} key={group.value}>
+            <div className={[styles.groupes, "scroll"].join(" ")} onScroll={ (e) => onScroll(e) }>
+                {groups.map((group, index)=>(
+                    <div className={[styles.groupe__ingrid, "mb-10"].join(" ")}
+                         key={group.value}
+                         ref={ refs.current[index] }
+                    >
                         <p className="text text_type_main-medium mb-3">
                             {group.name}
                         </p>
                         <div className={[styles.ingrid, ""].join(" ")}>
-                            {ingridGroups[group.value].map((inrgid, index)=>(
+                            {ingredients.map((inrgid, index)=>(
+                                inrgid.type === group.value &&
+                                    <BurgerIngredient {...inrgid} key={index} />
 
-                                <div className={[styles.ingrid__item, ""].join(" ")} key={index} onClick={ () => { setModal(inrgid) } }>
-                                    {inrgid.__v >= 1 &&
-                                        <Counter count={inrgid.__v} size="default" />
-                                    }
-
-                                    <div className={[styles.ingrid__img, "ml-4 mr-4"].join(" ")}>
-                                        <img src={inrgid.image} alt={inrgid.name} />
-                                    </div>
-                                    <div className={[styles.ingrid__item__price, "m-1 text text_type_digits-default"].join(" ")}>
-                                        {inrgid.price} <CurrencyIcon type="primary" />
-                                    </div>
-                                    <div className={[styles.ingrid__item__title, "text text_type_main-default"].join(" ")}>
-                                        {inrgid.name}
-                                    </div>
-                                </div>
                             ))}
                         </div>
                     </div>
                 ))}
             </div>
-            {modal &&
+            {ingredientDetails.name &&
                 <Modal title="Детали ингредиента" closePopup={closePopup} >
-                    <IngredientDetails item={modal} />
+                    <IngredientDetails />
                 </Modal>
             }
         </section>

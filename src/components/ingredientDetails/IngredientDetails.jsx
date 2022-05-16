@@ -1,38 +1,39 @@
-// hocs/with-toggle.js
 import React from 'react';
-import PropTypes from "prop-types";
 import styles from './IngredientDetails.module.css';
-import ingredientsPropTypes from '../../utils/types';
+
+import { useSelector } from 'react-redux';
 
 
-export default function IngredientDetails (props) {
-    const [type, setType] = React.useState();
+export default function IngredientDetails () {
+    const { ingredient } = useSelector(
+        store => store.ingredientDetails
+    );
 
     return (
         <>
-            <img className={styles.img} src={props.item.image_large} />
+            <img className={styles.img} src={ingredient.image_large} alt={ingredient.name} />
             <div className={[styles.title, "text text_type_main-medium mt-4 mb-8"].join(" ")} >
-                {props.item.name}
+                {ingredient.name}
             </div>
             <div className={[styles.nutritional, "text text_type_main-default text_color_inactive"].join(" ")}>
                 <div className={styles.nutritional__item}>
                     Калории, ккал<br/>
-                <span className="text text_type_digits-default">{props.item.calories}</span>
+                <span className="text text_type_digits-default">{ingredient.calories}</span>
                 </div>
                 <div className={styles.nutritional__item}>
                     Белки, г<br/>
-                <span className="text text_type_digits-default">{props.item.proteins}</span>
+                <span className="text text_type_digits-default">{ingredient.proteins}</span>
                 </div>
                 <div className={styles.nutritional__item}>
                     Жиры, г<br/>
                     <span className="text text_type_digits-default">
-                        {props.item.fat}
+                        {ingredient.fat}
                     </span>
                 </div>
                 <div className={styles.nutritional__item}>
                     Углеводы, г<br/>
                     <span className="text text_type_digits-default">
-                        {props.item.carbohydrates}
+                        {ingredient.carbohydrates}
                     </span>
                 </div>
             </div>
@@ -40,7 +41,3 @@ export default function IngredientDetails (props) {
         </>
     )
 }
-
-IngredientDetails.propTypes = {
-    item: PropTypes.shape(ingredientsPropTypes)
-};
