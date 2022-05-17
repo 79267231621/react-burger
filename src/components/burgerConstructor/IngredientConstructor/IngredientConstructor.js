@@ -5,13 +5,12 @@ import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burg
 import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import {
-    DELETE_CONSTRUCTOR_INGREDIENT,
-    UPDATE_CONSTRUCTOR_INGREDIENT
+    deleteConstructorIngredient, updateConstructorIngredient
 } from "../../../services/actions/cart";
 
 export default function IngredientConstructor (props) {
     const dispatch = useDispatch();
-console.log(props);
+
     const [{ opacity }, dragCart] = useDrag({
         type: "cart",
         item: props.item ,
@@ -23,11 +22,7 @@ console.log(props);
     const [ , dropCart] = useDrop({
         accept: "cart",
         drop(item) {
-            dispatch({
-                type: UPDATE_CONSTRUCTOR_INGREDIENT,
-                item: item,
-                updateItem: props.item
-            });
+            dispatch( updateConstructorIngredient(item, props.item) );
         },
     });
 
@@ -44,7 +39,7 @@ console.log(props);
                     text={props.item.name}
                     price={props.item.price}
                     thumbnail={props.item.image}
-                    handleClose={() => dispatch({type: DELETE_CONSTRUCTOR_INGREDIENT, item: props.item, index: props.index})}
+                    handleClose={() => dispatch(deleteConstructorIngredient(props.item) )}
                 />
             </div>
         </div>

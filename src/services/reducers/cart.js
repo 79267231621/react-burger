@@ -1,7 +1,8 @@
 import {
     ADD_CONSTRUCTOR_INGREDIENT,
     UPDATE_CONSTRUCTOR_INGREDIENT,
-    DELETE_CONSTRUCTOR_INGREDIENT
+    DELETE_CONSTRUCTOR_INGREDIENT,
+    CLEARE_CONSTRUCTOR_INGREDIENT
 } from '../actions/cart';
 
 const initialState = {
@@ -40,23 +41,12 @@ export const cart = (state = initialState, action) => {
                 ingredients: [...state.ingredients, action.item ],
                 total: state.total + action.item.price
             };
-            /*
-            if( !state.ingredients.find(ingredient => ingredient._id === action.item._id) ) {
-                return {
-                    ...state,
-                    ingredients: [...state.ingredients, action.item ],
-                    total: state.total + action.item.price
-                };
-            } else {
-                return state;
-            }
-            */
         }
         case DELETE_CONSTRUCTOR_INGREDIENT: {
             return {
                 ...state,
                 ingredients: [
-                     ...state.ingredients.filter((item, index) => index !== action.index)
+                     ...state.ingredients.filter((item) => item.uuid !== action.item.uuid)
                 ],
                 total: state.total - action.item.price
             }
@@ -66,6 +56,9 @@ export const cart = (state = initialState, action) => {
             state.ingredients.splice(oldIndex, 1 );
 
             let index = state.ingredients.indexOf(action.updateItem);
+            if( oldIndex<=index ){
+                index++;
+            }
             state.ingredients.splice(index, 0,action.item ); // так можно удалить элемент
 
             return {
@@ -73,6 +66,11 @@ export const cart = (state = initialState, action) => {
                 ingredients: [
                     ...state.ingredients
                 ]
+            }
+        }
+        case CLEARE_CONSTRUCTOR_INGREDIENT:{
+            return {
+                ...initialState
             }
         }
         default: {

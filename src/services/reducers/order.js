@@ -18,7 +18,7 @@ export const order = (state = initialState, action) => {
         case GET_ORDER_REQUEST: {
             return {
                 ...state,
-                itemsRequest: true
+                orderRequest: true
             }
         }
         case GET_ORDER_SUCCESS: {

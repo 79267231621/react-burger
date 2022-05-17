@@ -24,7 +24,7 @@ export const ingredients = (state = initialState, action) => {
         case GET_INGREDIENTS_REQUEST: {
             return {
                 ...state,
-                itemsRequest: true
+                ingredientsRequest: true
             }
         }
         case GET_INGREDIENTS_SUCCESS: {

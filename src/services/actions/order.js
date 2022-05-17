@@ -1,3 +1,4 @@
+import { baseUrl, checkResponse } from '../../utils/api';
 
 export const GET_ORDER_SUCCESS = 'GET_ORDER_SUCCESS';
 export const GET_ORDER_REQUEST = 'GET_ORDER_REQUEST';
@@ -11,29 +12,20 @@ export function getOrder( orderList ) {
             type: GET_ORDER_REQUEST
         });
 
-        const url = 'https://norma.nomoreparties.space/api/orders';
+        const patch = baseUrl + 'orders';
 
-        fetch(url, {
+        fetch(patch, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(orderList)
-        }).then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-            dispatch({
-                type: GET_ORDER_FAILED
-            });
-            return Promise.reject(`Ошибка ${res.status}`);
-        })
+        }).then(checkResponse)
             .then(data => {
                 dispatch({
                     type: GET_ORDER_SUCCESS,
                     items: data
                 });
-
             })
             .catch(e => {
                 dispatch({
